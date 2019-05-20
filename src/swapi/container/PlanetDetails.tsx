@@ -8,8 +8,8 @@ import { fetchPlanetDetails, setPlanetDetails } from '../actions';
 import styled from 'styled-components';
 import { formatIsoToDate, numberWithSpace } from "../../utils/functions";
 import { darkGrey, shadow, globalRadius } from '../../utils/styles';
-import { renderInfo, renderList, renderDeepList } from '../components/Components';
 import { iSinglePlanet } from '../../utils/Types';
+import { renderInfo, renderList, renderDeepList } from './PlanetList';
 
 interface PlanetDetailsProps {
   planet: iSinglePlanet
@@ -38,8 +38,6 @@ class PlanetDetails extends React.Component<PlanetDetailsProps> {
     if (planet === undefined) {
       return <Spinner />
     }
-
-    console.log(planet)
 
     return (
       <Details>

@@ -9,10 +9,9 @@ import { ApplicationState } from '../../reducers';
 import Spinner from '../../common/Spinner';
 import { PATH, cachePlanetID } from '../../utils/globals';
 import { numberWithSpace } from '../../utils/functions';
-import { renderInfo } from '../components/Components';
 import Pagination from "../../common/Pagination";
 import { iPlanets } from '../../utils/Types';
-import { shadow } from '../../utils/styles';
+import { shadow, yellowColor } from '../../utils/styles';
 
 interface PlanetListProps {
   planets: iPlanets[]
@@ -47,7 +46,7 @@ class PlanetList extends React.Component<PlanetListProps, PlanetListState> {
     }
 
     return (
-      <List>
+      <Planetdiv>
         {this.state.pageOfItems.map((p: iPlanets, i: number) =>
           <Planet key={`${p.name}_${i}`} onClick={() => this.pickPlanet(p.id)}>
             <PlanetName>{p.name}</PlanetName>
@@ -56,7 +55,7 @@ class PlanetList extends React.Component<PlanetListProps, PlanetListState> {
           </Planet>
         )}
         <Pagination items={this.props.planets} onChangePage={this.onChangePage} />
-      </List>
+      </Planetdiv>
     )
   }
 
@@ -71,6 +70,34 @@ class PlanetList extends React.Component<PlanetListProps, PlanetListState> {
   private onChangePage(pageOfItems: iPlanets[]) {
     this.setState({ pageOfItems: pageOfItems });
   }
+}
+
+export function renderInfo(label: string, value: string | number) {
+  return <Info>{label}: <Bold>{value ? value : "none"}</Bold></Info>
+}
+
+export function renderList(label: string, array: string[]) {
+  return (
+    <Info>{label}:
+      <List>{array.map((el: string, i: number) =>
+        <ListElement key={`${el}_${i}`}>
+          <Bold>{el}</Bold>
+        </ListElement>)}
+      </List>
+    </Info>
+  )
+}
+
+export function renderDeepList(label: string, array: any[], key: string) {
+  return (
+    <Info>{label}:
+      <List>{array.map((el: any, i: number) =>
+        <ListElement key={`${el.node[key]}_${i}`}>
+          <Bold>{el.node[key]}</Bold>
+        </ListElement>)}
+      </List>
+    </Info>
+  )
 }
 
 const mapStateToProps = (store: ApplicationState) => {
@@ -88,7 +115,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
 
 export default connect(mapStateToProps, mapDispatchToProps)(PlanetList);
 
-const List = styled.div``;
+const Planetdiv = styled.div``;
 
 const Planet = styled.div`
 overflow: hidden;
@@ -103,4 +130,28 @@ font-size: 1.3em;
 color: #8c8c8c;
 margin: 0.6em 0;
 font-weight: bold;
+`;
+
+const Info = styled.div`
+  margin: 1.2em 0;
+`;
+
+const Bold = styled.span`
+  font-weight: bold
+`;
+
+const ListElement = styled.li`
+  margin: 0.5em 0;
+  ::before {
+    content: '\\2756'; 
+    color: ${yellowColor};
+    font-weight: bold;
+    display: inline-block;
+    width: 1.5em;
+  }
+`;
+
+const List = styled.ul`
+  list-style: none;
+  padding-left: 1em;
 `;
